@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.customerdb.mapper.PurchaseInfoMapper.*;
+
 @Service
 public class PurchaseInfoServiceImpl implements PurchaseInfoService {
 
@@ -16,5 +18,15 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
     }
     public List<PurchaseInfo> findAll() {
         return purchaseInfoMapper.findAll();
+    }
+
+    @Override
+    public void addInfo(PurchaseInfo purchaseInfo) {
+        purchaseInfoMapper.insert(purchaseInfo);
+    }
+
+    @Override
+    public void editInfo(PurchaseInfo purchaseInfo) {
+        purchaseInfoMapper.update(purchaseInfo);
     }
 }

@@ -7,5 +7,6 @@ import java.util.List;
 public interface PurchaseInfoService {
 
     List<PurchaseInfo> findAll();
-
+    void addInfo(PurchaseInfo purchaseInfo);
+    void editInfo(PurchaseInfo purchaseInfo);
 }
