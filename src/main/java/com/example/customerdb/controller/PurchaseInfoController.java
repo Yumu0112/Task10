@@ -4,8 +4,6 @@ import com.example.customerdb.entity.PurchaseInfo;
 import com.example.customerdb.service.PurchaseInfoService;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -31,19 +29,20 @@ public class PurchaseInfoController {
         return purchaseInfoResponses;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/application")
     public void addInfo(@RequestBody PurchaseInfo purchaseInfo) {
-        LocalDateTime currentTime = LocalDateTime.now();
-        Timestamp timestamp = Timestamp.valueOf(currentTime);
-        purchaseInfo.setPurchaseDate(timestamp);
-
         purchaseInfoService.addInfo(purchaseInfo);
     }
 
 //    こちらは作成途中です
-//    @PutMapping("/{id}")
-//    public void editInfo(@RequestBody PurchaseInfo purchaseInfo) {
-//        purchaseInfoService.editInfo(purchaseInfo);
-//    }
+    @PutMapping("/{id}")
+    public void updateInfo(@PathVariable int id, PurchaseInfo purchaseInfo) {
+        purchaseInfoService.updateInfo(id, purchaseInfo);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteInfo(@PathVariable int id) {
+        purchaseInfoService.deleteInfo(id);
+    }
 
 }

@@ -4,9 +4,10 @@ import com.example.customerdb.entity.PurchaseInfo;
 import com.example.customerdb.mapper.PurchaseInfoMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
-import static com.example.customerdb.mapper.PurchaseInfoMapper.*;
 
 @Service
 public class PurchaseInfoServiceImpl implements PurchaseInfoService {
@@ -22,11 +23,19 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
 
     @Override
     public void addInfo(PurchaseInfo purchaseInfo) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        purchaseInfo.setPurchaseDate(currentTime);
+
         purchaseInfoMapper.insert(purchaseInfo);
     }
 
     @Override
-    public void editInfo(PurchaseInfo purchaseInfo) {
-        purchaseInfoMapper.update(purchaseInfo);
+    public void updateInfo(int id, PurchaseInfo purchaseInfo) {
+        purchaseInfoMapper.update(id, purchaseInfo);
+    }
+
+    @Override
+    public void deleteInfo(int id) {
+        purchaseInfoMapper.delete(id);
     }
 }
