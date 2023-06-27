@@ -34,12 +34,12 @@ public class PurchaseInfoController {
         purchaseInfoService.addInfo(purchaseInfo);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/purchase-info/{id}")
     public void updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.updateInfo(id, purchaseInfo);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/purchase-info/{id}")
     public void deleteInfo(@PathVariable int id) {
         purchaseInfoService.deleteInfo(id);
     }
