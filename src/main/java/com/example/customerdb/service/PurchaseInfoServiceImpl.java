@@ -2,11 +2,11 @@ package com.example.customerdb.service;
 
 import com.example.customerdb.entity.PurchaseInfo;
 import com.example.customerdb.mapper.PurchaseInfoMapper;
+import com.example.customerdb.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 
 @Service
@@ -29,13 +29,25 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
         purchaseInfoMapper.insert(purchaseInfo);
     }
 
-    @Override
-    public void updateInfo(int id, PurchaseInfo purchaseInfo) {
-        purchaseInfoMapper.update(id, purchaseInfo);
-    }
+//    @Override
+//    public void updateInfo(int id, PurchaseInfo purchaseInfo) {
+//        PurchaseInfo existingInfo = PurchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id + " not found."));
+//        purchaseInfoMapper.update(id, purchaseInfo);
+//        PurchaseInfo updatedPurchaseInfo = purchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id + " not found."));
+//
+//        return updatedPurchaseInfo;
+//    }
+@Override
+public void updateInfo(int id, PurchaseInfo purchaseInfo) {
+    PurchaseInfo existingInfo = purchaseInfoMapper.findOptionalById(id)
+            .orElseThrow(() -> new NotFoundException(id));
+    purchaseInfoMapper.update(id, purchaseInfo);
+}
+
 
     @Override
     public void deleteInfo(int id) {
         purchaseInfoMapper.delete(id);
     }
 }
+

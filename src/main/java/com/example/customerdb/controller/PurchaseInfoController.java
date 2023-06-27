@@ -34,9 +34,8 @@ public class PurchaseInfoController {
         purchaseInfoService.addInfo(purchaseInfo);
     }
 
-//    こちらは作成途中です
     @PutMapping("/{id}")
-    public void updateInfo(@PathVariable int id, PurchaseInfo purchaseInfo) {
+    public void updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.updateInfo(id, purchaseInfo);
     }
 
