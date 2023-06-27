@@ -2,8 +2,7 @@ package com.example.customerdb.controller;
 
 import com.example.customerdb.entity.PurchaseInfo;
 import com.example.customerdb.service.PurchaseInfoService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,11 +20,28 @@ public class PurchaseInfoController {
         return purchaseInfoService.findAll();
     }
 
-    @GetMapping("/purchase-info/price")
+//    Serviceを使ったpriceのみの一覧表示
+    @GetMapping("/pricelist")
     public List<PurchaseInfoResponse> price() {
         List<PurchaseInfo> purchaseInfos = purchaseInfoService.findAll();
         List<PurchaseInfoResponse> purchaseInfoResponses = purchaseInfos.stream().map(PurchaseInfoResponse::new).toList();
 
         return purchaseInfoResponses;
     }
+
+    @PostMapping("/purchase-info")
+    public void addInfo(@RequestBody PurchaseInfo purchaseInfo) {
+        purchaseInfoService.addInfo(purchaseInfo);
+    }
+
+    @PutMapping("/purchase-info/{id}")
+    public void updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
+        purchaseInfoService.updateInfo(id, purchaseInfo);
+    }
+
+    @DeleteMapping("/purchase-info/{id}")
+    public void deleteInfo(@PathVariable int id) {
+        purchaseInfoService.deleteInfo(id);
+    }
+
 }
