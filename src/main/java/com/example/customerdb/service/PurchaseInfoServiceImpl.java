@@ -29,18 +29,9 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
         purchaseInfoMapper.insert(purchaseInfo);
     }
 
-//    @Override
-//    public void updateInfo(int id, PurchaseInfo purchaseInfo) {
-//        PurchaseInfo existingInfo = PurchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id + " not found."));
-//        purchaseInfoMapper.update(id, purchaseInfo);
-//        PurchaseInfo updatedPurchaseInfo = purchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id + " not found."));
-//
-//        return updatedPurchaseInfo;
-//    }
 @Override
 public void updateInfo(int id, PurchaseInfo purchaseInfo) {
-    PurchaseInfo existingInfo = purchaseInfoMapper.findOptionalById(id)
-            .orElseThrow(() -> new NotFoundException(id));
+    PurchaseInfo existingInfo = purchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id));
     purchaseInfoMapper.update(id, purchaseInfo);
 }
 

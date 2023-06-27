@@ -15,7 +15,7 @@ public class PurchaseInfoController {
     public PurchaseInfoController(PurchaseInfoService purchaseInfoService) {
         this.purchaseInfoService = purchaseInfoService;
     }
-    @GetMapping("/")
+    @GetMapping("/purchase-info")
     public List<PurchaseInfo> info() {
         return purchaseInfoService.findAll();
     }
@@ -29,7 +29,7 @@ public class PurchaseInfoController {
         return purchaseInfoResponses;
     }
 
-    @PostMapping("/application")
+    @PostMapping("/purchase-info")
     public void addInfo(@RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.addInfo(purchaseInfo);
     }
