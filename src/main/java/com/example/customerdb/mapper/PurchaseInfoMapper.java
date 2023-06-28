@@ -17,12 +17,10 @@ public interface PurchaseInfoMapper {
     @Insert("INSERT INTO purchase_info (name, email,purchaseDate, price) VALUES (#{name}, #{email}, #{purchaseDate}, #{price})")
     void insert(PurchaseInfo purchaseInfo);
 
-    @Update("UPDATE purchase_info SET name = #{purchaseInfo.name}, email = #{purchaseInfo.email}, price = #{purchaseInfo.price} WHERE id = #{id}")
+    @Update("UPDATE purchase_info SET name = #{purchaseInfo.name}, email = #{purchaseInfo.email}, purchaseDate = #{purchaseInfo.purchaseDate}, price = #{purchaseInfo.price} WHERE id = #{id}")
     void update(int id, @Param("purchaseInfo") PurchaseInfo purchaseInfo);
-
     @Select("SELECT * FROM purchase_info WHERE id = #{id}")
     Optional<PurchaseInfo> findOptionalById(int id);
-
     @Delete("DELETE FROM purchase_info WHERE id = #{id}")
     void delete(int id);
 }

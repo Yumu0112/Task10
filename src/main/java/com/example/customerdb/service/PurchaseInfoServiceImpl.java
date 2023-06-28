@@ -22,23 +22,49 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
     }
 
     @Override
-    public void addInfo(PurchaseInfo purchaseInfo) {
+    public PurchaseInfo addInfo(PurchaseInfo purchaseInfo) {
         LocalDateTime currentTime = LocalDateTime.now();
         purchaseInfo.setPurchaseDate(currentTime);
 
         purchaseInfoMapper.insert(purchaseInfo);
+        return purchaseInfo;
     }
 
     @Override
-    public void updateInfo(int id, PurchaseInfo purchaseInfo) {
+    public PurchaseInfo updateInfo(int id, PurchaseInfo purchaseInfo) {
         PurchaseInfo existingInfo = purchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id));
         purchaseInfoMapper.update(id, purchaseInfo);
+        return purchaseInfo;
+    }
+
+    @Override
+    public PurchaseInfo editInfo(int id, PurchaseInfo purchaseInfo) {
+        PurchaseInfo existingInfo = purchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id));
+
+        if (existingInfo != null) {
+            if (purchaseInfo.getName() != null && !purchaseInfo.getName().equals(existingInfo.getName())) {
+                existingInfo.setName(purchaseInfo.getName());
+            }
+            if (purchaseInfo.getEmail() != null && !purchaseInfo.getEmail().equals(existingInfo.getEmail())) {
+                existingInfo.setEmail(purchaseInfo.getEmail());
+            }
+            if (purchaseInfo.getPurchaseDate() != null && !purchaseInfo.getPurchaseDate().equals(existingInfo.getPurchaseDate())) {
+                existingInfo.setPurchaseDate(purchaseInfo.getPurchaseDate());
+            }
+            if (purchaseInfo.getPrice() != existingInfo.getPrice()) {
+                existingInfo.setPrice(purchaseInfo.getPrice());
+            }
+            purchaseInfoMapper.update(id, purchaseInfo);
+        }
+        return existingInfo;
     }
 
 
     @Override
-    public void deleteInfo(int id) {
+    public PurchaseInfo deleteInfo(int id) {
+        PurchaseInfo deleted = purchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id));
         purchaseInfoMapper.delete(id);
+        return deleted;
     }
 }
 
