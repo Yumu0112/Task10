@@ -22,4 +22,16 @@ public class PurchaseInfo {
         this.purchaseDate = purchaseDate;
         this.price = price;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        PurchaseInfo other = (PurchaseInfo) obj;
+        return id == other.id;
+    }
 }

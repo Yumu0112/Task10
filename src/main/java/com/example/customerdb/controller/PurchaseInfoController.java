@@ -2,6 +2,7 @@ package com.example.customerdb.controller;
 
 import com.example.customerdb.entity.PurchaseInfo;
 import com.example.customerdb.service.PurchaseInfoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,8 +47,9 @@ public class PurchaseInfoController {
 }
 
     @DeleteMapping("/purchase-info/{id}")
-    public void deleteInfo(@PathVariable int id) {
+    public ResponseEntity<String> deleteInfo(@PathVariable int id) {
         purchaseInfoService.deleteInfo(id);
+        return ResponseEntity.ok("Purchase info with ID " + id + " has been deleted");
     }
 
 }
