@@ -5,13 +5,10 @@ import com.example.customerdb.exception.NotFoundException;
 import com.example.customerdb.mapper.PurchaseInfoMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -132,7 +129,6 @@ class PurchaseInfoServiceImplTest {
 
         assertEquals(expectedInfo, actualMovie);
     }
-
 
 }
 
