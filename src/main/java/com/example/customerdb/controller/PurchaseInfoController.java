@@ -15,7 +15,11 @@ import java.util.Map;
 public class PurchaseInfoController {
 
     private final PurchaseInfoService purchaseInfoService;
+    private final HttpStatus httpStatus = HttpStatus.OK;
 
+    private final Map<String, Object> response = new HashMap<>();
+
+    private final Map<String, Map<String, Object>> responseBody = new HashMap<>();
     public PurchaseInfoController(PurchaseInfoService purchaseInfoService) {
         this.purchaseInfoService = purchaseInfoService;
     }
@@ -35,11 +39,7 @@ public class PurchaseInfoController {
 
     @PostMapping("/purchase-info")
     public ResponseEntity<Map<String, Map<String, Object>>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
-        HttpStatus httpStatus = HttpStatus.OK;
-        Map<String, Object> response = new HashMap<>();
         response.put("content", purchaseInfo);
-
-        Map<String, Map<String, Object>> responseBody = new HashMap<>();
         responseBody.put(httpStatus.toString(), response);
 
         return ResponseEntity.ok(responseBody);
@@ -48,11 +48,7 @@ public class PurchaseInfoController {
 
     @PutMapping("/purchase-info/{id}")
     public ResponseEntity<Map<String, Map<String, Object>>> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
-        HttpStatus httpStatus = HttpStatus.OK;
-        Map<String, Object> response = new HashMap<>();
         response.put("content", purchaseInfo);
-
-        Map<String, Map<String, Object>> responseBody = new HashMap<>();
         responseBody.put(httpStatus.toString(), response);
 
         return ResponseEntity.ok(responseBody);
@@ -60,21 +56,14 @@ public class PurchaseInfoController {
 
     @PatchMapping("/purchase-info/{id}")
     public ResponseEntity<Map<String, Map<String, Object>>> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo)  {
-        HttpStatus httpStatus = HttpStatus.OK;
-        Map<String, Object> response = new HashMap<>();
         response.put("content", purchaseInfo);
-
-        Map<String, Map<String, Object>> responseBody = new HashMap<>();
         responseBody.put(httpStatus.toString(), response);
 
         return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<Object, String>> deleteInfo(@PathVariable int id) {
-        HttpStatus httpStatus = HttpStatus.OK;
-
-        Map<Object, String> response = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> deleteInfo(@PathVariable int id) {
         response.put("status", httpStatus.toString());
         response.put("message", "Info successfully deleted");
 
