@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Getter
@@ -23,15 +24,18 @@ public class PurchaseInfo {
         this.price = price;
     }
 
+
+
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        PurchaseInfo other = (PurchaseInfo) obj;
-        return id == other.id;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PurchaseInfo that = (PurchaseInfo) o;
+        return id == that.id && price == that.price && Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(purchaseDate, that.purchaseDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, purchaseDate, price);
     }
 }

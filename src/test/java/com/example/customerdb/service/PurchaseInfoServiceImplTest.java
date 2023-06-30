@@ -10,7 +10,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,8 +63,6 @@ class PurchaseInfoServiceImplTest {
         assertEquals(purchaseInfo.getPrice(), actual.getPrice());
 
     }
-
-
 
     @Test
     public void 指定されたidに該当するレコードがなかったら例外をthrowすること() {
@@ -128,6 +129,15 @@ class PurchaseInfoServiceImplTest {
         PurchaseInfo actualMovie = purchaseInfoService.deleteInfo(1);
 
         assertEquals(expectedInfo, actualMovie);
+    }
+
+    @Test
+    void 削除指定したidのレコードがない場合は例外をthrowすること() {
+        int id = 1;
+        when(purchaseInfoMapper.findOptionalById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> purchaseInfoService.deleteInfo(id));
+        verify(purchaseInfoMapper, never()).delete(id);
+
     }
 
 }

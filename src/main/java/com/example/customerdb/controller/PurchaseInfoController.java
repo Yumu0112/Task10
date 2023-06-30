@@ -41,7 +41,7 @@ public class PurchaseInfoController {
         purchaseInfoService.updateInfo(id, purchaseInfo);
     }
 
-    @PatchMapping("/purchase_info/{id}")
+    @PatchMapping("/purchase-info/{id}")
     public void editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo)  {
         purchaseInfoService.editInfo(id, purchaseInfo);
 }
