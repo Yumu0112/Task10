@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,11 @@ import java.util.Map;
 public class PurchaseInfoController {
 
     private final PurchaseInfoService purchaseInfoService;
+    private final HttpStatus httpStatus = HttpStatus.OK;
 
+    private final Map<String, Object> response = new HashMap<>();
+
+    private final Map<String, Map<String, Object>> responseBody = new HashMap<>();
     public PurchaseInfoController(PurchaseInfoService purchaseInfoService) {
         this.purchaseInfoService = purchaseInfoService;
     }
@@ -23,7 +28,7 @@ public class PurchaseInfoController {
         return purchaseInfoService.findAll();
     }
 
-//    Serviceを使ったpriceのみの一覧表示
+    //    Serviceを使ったpriceのみの一覧表示
     @GetMapping("/pricelist")
     public List<PurchaseInfoResponse> price() {
         List<PurchaseInfo> purchaseInfos = purchaseInfoService.findAll();
@@ -33,29 +38,43 @@ public class PurchaseInfoController {
     }
 
     @PostMapping("/purchase-info")
-    public ResponseEntity<Map<String,String>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
+    public ResponseEntity<Map<String, Map<String, Object>>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.addInfo(purchaseInfo);
-        return ResponseEntity.ok(Map.of("status", "character successfully created"));
+
+        response.put("content", purchaseInfo);
+        responseBody.put(httpStatus.toString(), response);
+
+        return ResponseEntity.ok(responseBody);
     }
 
 
     @PutMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<String,String>> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
+    public ResponseEntity<Map<String, Map<String, Object>>> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.updateInfo(id, purchaseInfo);
-        return ResponseEntity.ok(Map.of("status", "character successfully updated"));
 
+        response.put("content", purchaseInfo);
+        responseBody.put(httpStatus.toString(), response);
+
+        return ResponseEntity.ok(responseBody);
     }
 
     @PatchMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<String,String>> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo)  {
+    public ResponseEntity<Map<String, Map<String, Object>>> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo)  {
         purchaseInfoService.editInfo(id, purchaseInfo);
-        return ResponseEntity.ok(Map.of("status", "Info successfully updated"));
+
+        response.put("content", purchaseInfo);
+        responseBody.put(httpStatus.toString(), response);
+
+        return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<String, String>> deleteInfo(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> deleteInfo(@PathVariable int id) {
         purchaseInfoService.deleteInfo(id);
-        return ResponseEntity.ok(Map.of("status", "Info successfully deleted"));
-    }
 
+        response.put("status", httpStatus.toString());
+        response.put("message", "Info successfully deleted");
+
+        return ResponseEntity.ok(response);
+    }
 }
