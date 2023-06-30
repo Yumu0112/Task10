@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,29 +34,50 @@ public class PurchaseInfoController {
     }
 
     @PostMapping("/purchase-info")
-    public ResponseEntity<Map<String,String>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
-        purchaseInfoService.addInfo(purchaseInfo);
-        return ResponseEntity.ok(Map.of("status", "character successfully created"));
+    public ResponseEntity<Map<String, Map<String, Object>>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
+        HttpStatus httpStatus = HttpStatus.OK;
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", purchaseInfo);
+
+        Map<String, Map<String, Object>> responseBody = new HashMap<>();
+        responseBody.put(httpStatus.toString(), response);
+
+        return ResponseEntity.ok(responseBody);
     }
 
 
     @PutMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<String,String>> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
-        purchaseInfoService.updateInfo(id, purchaseInfo);
-        return ResponseEntity.ok(Map.of("status", "character successfully updated"));
+    public ResponseEntity<Map<String, Map<String, Object>>> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
+        HttpStatus httpStatus = HttpStatus.OK;
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", purchaseInfo);
 
+        Map<String, Map<String, Object>> responseBody = new HashMap<>();
+        responseBody.put(httpStatus.toString(), response);
+
+        return ResponseEntity.ok(responseBody);
     }
 
     @PatchMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<String,String>> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo)  {
-        purchaseInfoService.editInfo(id, purchaseInfo);
-        return ResponseEntity.ok(Map.of("status", "Info successfully updated"));
+    public ResponseEntity<Map<String, Map<String, Object>>> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo)  {
+        HttpStatus httpStatus = HttpStatus.OK;
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", purchaseInfo);
+
+        Map<String, Map<String, Object>> responseBody = new HashMap<>();
+        responseBody.put(httpStatus.toString(), response);
+
+        return ResponseEntity.ok(responseBody);
     }
 
     @DeleteMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<String, String>> deleteInfo(@PathVariable int id) {
-        purchaseInfoService.deleteInfo(id);
-        return ResponseEntity.ok(Map.of("status", "Info successfully deleted"));
-    }
+    public ResponseEntity<Map<Object, String>> deleteInfo(@PathVariable int id) {
+        HttpStatus httpStatus = HttpStatus.OK;
 
+        Map<Object, String> response = new HashMap<>();
+        response.put("status", httpStatus.toString());
+        response.put("message", "Info successfully deleted");
+
+        return ResponseEntity.ok(response);
+    }
 }
