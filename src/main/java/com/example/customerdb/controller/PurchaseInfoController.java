@@ -39,6 +39,8 @@ public class PurchaseInfoController {
 
     @PostMapping("/purchase-info")
     public ResponseEntity<Map<String, Map<String, Object>>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
+        purchaseInfoService.addInfo(purchaseInfo);
+
         response.put("content", purchaseInfo);
         responseBody.put(httpStatus.toString(), response);
 
@@ -48,6 +50,8 @@ public class PurchaseInfoController {
 
     @PutMapping("/purchase-info/{id}")
     public ResponseEntity<Map<String, Map<String, Object>>> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
+        purchaseInfoService.updateInfo(id, purchaseInfo);
+
         response.put("content", purchaseInfo);
         responseBody.put(httpStatus.toString(), response);
 
@@ -56,6 +60,8 @@ public class PurchaseInfoController {
 
     @PatchMapping("/purchase-info/{id}")
     public ResponseEntity<Map<String, Map<String, Object>>> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo)  {
+        purchaseInfoService.editInfo(id, purchaseInfo);
+
         response.put("content", purchaseInfo);
         responseBody.put(httpStatus.toString(), response);
 
@@ -64,6 +70,8 @@ public class PurchaseInfoController {
 
     @DeleteMapping("/purchase-info/{id}")
     public ResponseEntity<Map<String, Object>> deleteInfo(@PathVariable int id) {
+        purchaseInfoService.deleteInfo(id);
+
         response.put("status", httpStatus.toString());
         response.put("message", "Info successfully deleted");
 
