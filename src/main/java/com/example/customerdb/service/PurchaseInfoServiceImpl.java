@@ -51,4 +51,3 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
         return deleted;
     }
 }
-
