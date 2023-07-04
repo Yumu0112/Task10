@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseInfoJsonResponse {
-    private PurchaseInfo content;
+    private int id;
+    private PurchaseInfo purchaseInfo;
 
 }

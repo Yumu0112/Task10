@@ -2,6 +2,7 @@ package com.example.customerdb.controller;
 
 
 import com.example.customerdb.entity.PurchaseInfo;
+import com.example.customerdb.exception.NotFoundException;
 import com.example.customerdb.service.PurchaseInfoService;
 import com.example.customerdb.service.PurchaseInfoServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -133,52 +135,49 @@ public class PurchaseInfoControllerTest {
                         .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
-                        {
-                             "content": {
-                                    "id": 0,
-                                    "name": "ziro",
-                                    "email": "ziro@example.com",
-                                    "purchaseDate": null,
-                                    "price": 1900
-                                }
+                        {    
+                             "message": "Info successfully created"
                         }
                         """));
     }
 
     @Test
     public void PUTで指定されたidのデータが更新できること() throws Exception {
-        PurchaseInfo purchaseInfo = new PurchaseInfo(4, "kai", "ddd@example.com", null, 9999);
-        when(purchaseInfoServiceImpl.updateInfo(4, purchaseInfo)).thenReturn(purchaseInfo);
+        PurchaseInfo purchaseInfo = new PurchaseInfo(43, "kai", "ddd@example.com", null, 9999);
+        when(purchaseInfoServiceImpl.addInfo(purchaseInfo)).thenReturn(purchaseInfo);
 
         String requestBody = """
                 {
-                    "name": "hachiro"
-               
+                    "name": "ziro",
+                    "email": "ziro@example.com",
+                    "price": 1900
                 }
                 """;
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/purchase-info/4")
+                        .put("/purchase-info/43")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
-                       {
-                           "content": {
-                               "id": 0,
-                               "name": "hachiro",
-                               "email": null,
-                               "purchaseDate": null,
-                               "price": 0
+                        {
+                              "id": 43,
+                              "purchaseInfo": {
+                                  "id": 0,
+                                  "name": "ziro",
+                                  "email": "ziro@example.com",
+                                  "purchaseDate": null,
+                                  "price": 1900
+                               }
                            }
-                       }
-                        """));
+                             """));
     }
 
     @Test
     public void PATCHで指定されたidのデータが更新できること() throws Exception {
+        int id = 4;
         PurchaseInfo purchaseInfo = new PurchaseInfo(4, "kai", "ddd@example.com", null, 9999);
-        when(purchaseInfoServiceImpl.updateInfo(4, purchaseInfo)).thenReturn(purchaseInfo);
+        when(purchaseInfoServiceImpl.updateInfo(id, purchaseInfo)).thenReturn(purchaseInfo);
 
         String requestBody = """
                 {
@@ -193,13 +192,14 @@ public class PurchaseInfoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                             {
-                                "content": {
+                                "id": 4,
+                                 "purchaseInfo": {
                                      "id": 0,
-                                     "name":null,
+                                     "name": null,
                                      "email": null,
                                      "purchaseDate": null,
                                      "price": 7878
-                            }
+                                 }
                            }
                    
                         """));
@@ -222,5 +222,16 @@ public class PurchaseInfoControllerTest {
         }
         """, response, JSONCompareMode.STRICT);
     }
+
+    @Test
+    public void 存在しないidを削除指定された場合にエラーを返すこと() throws Exception {
+        when(purchaseInfoServiceImpl.deleteInfo(9999)).thenThrow(new NotFoundException(9999));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/purchase-info/9999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value("404"));
+    }
+
+
 
 }

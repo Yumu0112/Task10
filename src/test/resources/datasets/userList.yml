@@ -1,0 +1,16 @@
+purchase_info:
+  - id: 1
+    name: "Tanaka"
+    email: "aaa@example.com"
+    purchaseDate: "2014-08-05T09:32:57"
+    price: 8080
+  - id: 2
+    name: "Yamada"
+    email: "bbb@example.com"
+    purchaseDate: "2010-12-23:23:23"
+    price: 5400
+  - id: 3
+    name: "Uchida"
+    emali: "ccc@example.com"
+    purchaseDate: "2022-02-19T14:56:00"
+    price: 12000

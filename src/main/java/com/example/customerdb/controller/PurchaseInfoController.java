@@ -39,23 +39,23 @@ public class PurchaseInfoController {
     }
 
     @PostMapping("/purchase-info")
-    public ResponseEntity<PurchaseInfoJsonResponse> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
+    public ResponseEntity<Map<String, Object>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.addInfo(purchaseInfo);
-        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(purchaseInfo);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Info successfully created");
         return ResponseEntity.ok(response);
     }
-
     @PutMapping("/purchase-info/{id}")
     public ResponseEntity<PurchaseInfoJsonResponse> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.updateInfo(id, purchaseInfo);
-        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(purchaseInfo);
+        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(id, purchaseInfo);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/purchase-info/{id}")
     public ResponseEntity<PurchaseInfoJsonResponse> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.editInfo(id, purchaseInfo);
-        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(purchaseInfo);
+        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(id,purchaseInfo);
         return ResponseEntity.ok(response);
     }
 

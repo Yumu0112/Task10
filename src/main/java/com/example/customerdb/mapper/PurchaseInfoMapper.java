@@ -15,6 +15,7 @@ public interface PurchaseInfoMapper {
     List<PurchaseInfo> findAll();
 
     @Insert("INSERT INTO purchase_info (name, email,purchaseDate, price) VALUES (#{name}, #{email}, #{purchaseDate}, #{price})")
+    @Options(useGeneratedKeys=true, keyColumn="id")
     void insert(PurchaseInfo purchaseInfo);
 
     @Update("UPDATE purchase_info SET name = #{purchaseInfo.name}, email = #{purchaseInfo.email}, purchaseDate = #{purchaseInfo.purchaseDate}, price = #{purchaseInfo.price} WHERE id = #{id}")
