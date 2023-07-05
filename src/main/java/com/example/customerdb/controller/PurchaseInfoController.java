@@ -39,9 +39,9 @@ public class PurchaseInfoController {
     }
 
     @PostMapping("/purchase-info")
-    public ResponseEntity<Map<String, Object>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
+    public ResponseEntity<Map<String, String>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.addInfo(purchaseInfo);
-        Map<String, Object> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         response.put("message", "Info successfully created");
         return ResponseEntity.ok(response);
     }
