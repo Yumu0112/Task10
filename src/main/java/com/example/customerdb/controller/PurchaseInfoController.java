@@ -60,9 +60,9 @@ public class PurchaseInfoController {
     }
 
     @DeleteMapping("/purchase-info/{id}")
-    public ResponseEntity<Map<String, Object>> deleteInfo(@PathVariable int id) {
+    public ResponseEntity<Map<String, String>> deleteInfo(@PathVariable int id) {
         purchaseInfoService.deleteInfo(id);
-        Map<String, Object> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         response.put("message", "Info successfully deleted");
         return ResponseEntity.ok(response);
     }
