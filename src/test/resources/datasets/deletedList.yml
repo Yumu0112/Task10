@@ -1,0 +1,11 @@
+purchase_info:
+  - id: 1
+    name: "Tanaka"
+    email: "aaa@example.com"
+    purchaseDate: null
+    price: 8080
+  - id: 2
+    name: "Yamada"
+    email: "bbb@example.com"
+    purchaseDate: null
+    price: 5400
