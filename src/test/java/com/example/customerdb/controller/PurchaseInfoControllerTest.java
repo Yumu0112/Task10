@@ -1,7 +1,6 @@
 package com.example.customerdb.controller;
 
 import com.example.customerdb.entity.PurchaseInfo;
-import com.example.customerdb.exception.NotFoundException;
 import com.example.customerdb.service.PurchaseInfoService;
 import com.example.customerdb.service.PurchaseInfoServiceImpl;
 import org.junit.jupiter.api.Test;
