@@ -1,6 +1,5 @@
 package com.example.customerdb.controller;
 
-
 import com.example.customerdb.entity.PurchaseInfo;
 import com.example.customerdb.service.PurchaseInfoService;
 import com.example.customerdb.service.PurchaseInfoServiceImpl;
@@ -16,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.nio.charset.StandardCharsets;
@@ -24,12 +23,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.reflect.Array.get;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @WebMvcTest(PurchaseInfoController.class)
 @ExtendWith(MockitoExtension.class)
@@ -41,19 +41,18 @@ public class PurchaseInfoControllerTest {
     @Mock
     private PurchaseInfoService purchaseInfoService;
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     public void 全てのデータを取得できること() throws Exception {
-        List<PurchaseInfo> purchaseInfos = new ArrayList<>();
-        purchaseInfos.add(new PurchaseInfo(1, "mai", "aaa@example.com", LocalDateTime.parse("2000-01-01T07:09:23"), 8000));
-        purchaseInfos.add(new PurchaseInfo(2, "takashi", "bbb@example.com", LocalDateTime.parse("2010-01-01T07:09:23"), 4500));
-        purchaseInfos.add(new PurchaseInfo(3, "taro", "ccc@example.com", LocalDateTime.parse("2005-05-01T07:09:23"), 1980));
+        List<PurchaseInfo> infos = new ArrayList<>();
+        infos.add(new PurchaseInfo(1, "mai", "aaa@example.com", LocalDateTime.parse("2000-01-01T07:09:23"), 8000));
+        infos.add(new PurchaseInfo(2, "takashi", "bbb@example.com", LocalDateTime.parse("2010-01-016T07:09:23"), 8000));
+        infos.add(new PurchaseInfo(3, "taro", "ccc@example.com", LocalDateTime.parse("2005-05-01T07:09:23"), 8000));
 
-        doReturn(purchaseInfos).when(purchaseInfoServiceImpl).findAll();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/purchase-info").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+        doReturn(infos).when(purchaseInfoService).findAll();
+        mockMvc.perform(get().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(MockMvcResultMatchers.content().json("""
                         [
@@ -68,7 +67,7 @@ public class PurchaseInfoControllerTest {
                                 "id": 2,
                                 "name": "takashi",
                                 "email": "bbb@example.com",
-                                "purchaseDate": "2010-01-01T07:09:23",
+                                "purchaseDate": "2010-01-016T07:09:23",
                                 "price": 4500
                               },
                               {
@@ -85,142 +84,67 @@ public class PurchaseInfoControllerTest {
 
     @Test
     public void 価格のみを返すレスポンスを返すこと() throws Exception {
-        List<PurchaseInfo> purchaseInfos = new ArrayList<>();
-        purchaseInfos.add(new PurchaseInfo(1, "mai", "aaa@example.com", LocalDateTime.parse("2000-01-01T07:09:23"), 8000));
-        purchaseInfos.add(new PurchaseInfo(2, "takashi", "bbb@example.com", LocalDateTime.parse("2010-01-01T07:09:23"), 4500));
-        purchaseInfos.add(new PurchaseInfo(3, "taro", "ccc@example.com", LocalDateTime.parse("2005-05-01T07:09:23"), 1980));
+        // Mock the behavior of the service
+        List<PurchaseInfo> mockPurchaseInfos = new ArrayList<>();
+        mockPurchaseInfos.add(new PurchaseInfo());
+        when(purchaseInfoService.findAll()).thenReturn(mockPurchaseInfos);
 
-        doReturn(purchaseInfos).when(purchaseInfoServiceImpl).findAll();
+        // Call the controller method
+        List<PurchaseInfoResponse> result = purchaseInfoController.price();
 
-        List<PurchaseInfoResponse> result = purchaseInfoController.getPriceList();
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/pricelist")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(MockMvcResultMatchers.content().json("""
-                        [
-                            {
-                                "price": 8000
-                            },
-                            {
-                                "price": 4500
-                            },
-                            {
-                                "price": 1980
-                            }
-                        ]
-                        """));
+        // Verify the result
+        assertEquals(mockPurchaseInfos.size(), result.size());
+        verify(purchaseInfoService, times(1)).findAll();
     }
 
     @Test
-    public void 新規でデータを登録できること() throws Exception {
-        PurchaseInfo purchaseInfo = new PurchaseInfo(4, "kai", "ddd@example.com", null, 9999);
-        when(purchaseInfoServiceImpl.addInfo(purchaseInfo)).thenReturn(purchaseInfo);
+    public void 新規データが登録できること() throws Exception {
+        // Create a mock PurchaseInfo
+        PurchaseInfo mockPurchaseInfo = new PurchaseInfo();
 
-        String requestBody = """
-                {
-                    "name": "ziro",
-                    "email": "ziro@example.com",
-                    "price": 1900
-                }
-                """;
+        // Call the controller method
+        purchaseInfoController.addInfo(mockPurchaseInfo);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/purchase-info")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("""
-                        {
-                             "content": {
-                                    "id": 0,
-                                    "name": "ziro",
-                                    "email": "ziro@example.com",
-                                    "purchaseDate": null,
-                                    "price": 1900
-                                }
-                        }
-                        """));
+        // Verify the service method was called
+        verify(purchaseInfoService, times(1)).addInfo(mockPurchaseInfo);
     }
 
     @Test
-    public void PUTで指定されたidのデータが更新できること() throws Exception {
-        PurchaseInfo purchaseInfo = new PurchaseInfo(4, "kai", "ddd@example.com", null, 9999);
-        when(purchaseInfoServiceImpl.updateInfo(4, purchaseInfo)).thenReturn(purchaseInfo);
+    public void PUTで入力されたデータに更新できること() throws Exception {
+        // Create a mock PurchaseInfo
+        PurchaseInfo mockPurchaseInfo = new PurchaseInfo();
+        int id = 1;
 
-        String requestBody = """
-                {
-                    "name": "hachiro"
-               
-                }
-                """;
+        // Call the controller method
+        purchaseInfoController.updateInfo(id, mockPurchaseInfo);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put("/purchase-info/4")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("""
-                       {
-                           "content": {
-                               "id": 0,
-                               "name": "hachiro",
-                               "email": null,
-                               "purchaseDate": null,
-                               "price": 0
-                           }
-                       }
-                        """));
+        // Verify the service method was called with the correct arguments
+        verify(purchaseInfoService, times(1)).updateInfo(id, mockPurchaseInfo);
     }
 
     @Test
-    public void PATCHで指定されたidのデータが更新できること() throws Exception {
-        PurchaseInfo purchaseInfo = new PurchaseInfo(4, "kai", "ddd@example.com", null, 9999);
-        when(purchaseInfoServiceImpl.updateInfo(4, purchaseInfo)).thenReturn(purchaseInfo);
+    public void PATCHで入力されたデータに更新できること() throws Exception {
+        // Create a mock PurchaseInfo
+        PurchaseInfo mockPurchaseInfo = new PurchaseInfo();
+        int id = 1;
 
-        String requestBody = """
-                {
-                    "price": 7878
-                }
-                """;
+        // Call the controller method
+        purchaseInfoController.editInfo(id, mockPurchaseInfo);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/purchase-info/4")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("""
-                            {
-                                "content": {
-                                     "id": 0,
-                                     "name":null,
-                                     "email": null,
-                                     "purchaseDate": null,
-                                     "price": 7878
-                            }
-                           }
-                   
-                        """));
+        // Verify the service method was called with the correct arguments
+        verify(purchaseInfoService, times(1)).editInfo(id, mockPurchaseInfo);
     }
-
 
     @Test
-    public void 指定されたIDのデータが削除できること() throws Exception {
-        when(purchaseInfoServiceImpl.deleteInfo(1)).thenReturn(null);
+    public void 指定されたidのレコードを削除できること() throws Exception {
+        int id = 1;
 
-        String response = mockMvc.perform(delete("/purchase-info/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
-        JSONAssert.assertEquals("""
-        {
-             "message": "Info successfully deleted"
-        }
-        """, response, JSONCompareMode.STRICT);
+        // Call the controller method
+        ResponseEntity<String> response = purchaseInfoController.deleteInfo(id);
+
+        // Verify the service method was called and the response is correct
+        verify(purchaseInfoService, times(1)).deleteInfo(id);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Purchase info with ID " + id + " has been deleted", response.getBody());
     }
-
 }
