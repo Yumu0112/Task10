@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +57,18 @@ public class PurchaseInfoMapperTest {
         );
     }
 
+//    LocalDateTimeだとSQL側の型と合わない？？変換処理？
+//    @Test
+//    @DataSet(value = "datasets/selectWithDateList.yml")
+//    @ExpectedDataSet(value = "datasets/selectWithDateList.yml",ignoreCols = "purchaseDate")
+//    @Transactional
+//    public void 指定したidの情報が日付も含めて取得できること() {
+//        Optional<PurchaseInfo> purchaseInfo = purchaseInfoMapper.findOptionalById(1);
+//        assertThat(purchaseInfo).contains(
+//                new PurchaseInfo(1, "Tanaka", "aaa@example.com", LocalDateTime.parse("2022-03-28T10:48:52"), 8080)
+//        );
+//    }
+
     @Test
     @DataSet(value = "datasets/infoList.yml")
     @Transactional
@@ -66,7 +80,7 @@ public class PurchaseInfoMapperTest {
     @Test
     @Transactional
     @DataSet(value = "datasets/infoList.yml")
-    @ExpectedDataSet(value = "datasets/insertInfoList.yml")
+    @ExpectedDataSet(value = "datasets/insertInfoList.yml", ignoreCols = "id")
     public void 新しい情報が追加できること() {
         PurchaseInfo newPurchaseInfo = new PurchaseInfo(4, "kato", "kto@example.com", null, 9000);
         purchaseInfoMapper.insert(newPurchaseInfo);

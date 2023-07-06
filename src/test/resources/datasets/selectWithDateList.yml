@@ -1,0 +1,6 @@
+purchase_info:
+  - id: 1
+    name: "Tanaka"
+    email: "aaa@example.com"
+    purchaseDate: !!timestamp  "2022-03-28T10:48:52"
+    price: 8080
