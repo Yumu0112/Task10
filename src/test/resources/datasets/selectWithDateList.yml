@@ -1,0 +1,17 @@
+purchase_info:
+  - id: 1
+    name: "Tanaka"
+    email: "aaa@example.com"
+    purchaseDate: "2023-01-15 10:30:00"
+    price: 8080
+  - id: 2
+    name: "Yamada"
+    email: "bbb@example.com"
+    purchaseDate: "2023-02-20 15:45:00"
+    price: 5400
+  - id: 3
+    name: "Uchida"
+    email: "ccc@example.com"
+    purchaseDate: "2023-03-10 08:00:00"
+    price: 12000
+
