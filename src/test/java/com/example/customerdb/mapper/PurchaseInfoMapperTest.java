@@ -57,17 +57,20 @@ public class PurchaseInfoMapperTest {
         );
     }
 
-//    LocalDateTimeだとSQL側の型と合わない？？変換処理？
-//    @Test
-//    @DataSet(value = "datasets/selectWithDateList.yml")
-//    @ExpectedDataSet(value = "datasets/selectWithDateList.yml",ignoreCols = "purchaseDate")
-//    @Transactional
-//    public void 指定したidの情報が日付も含めて取得できること() {
-//        Optional<PurchaseInfo> purchaseInfo = purchaseInfoMapper.findOptionalById(1);
-//        assertThat(purchaseInfo).contains(
-//                new PurchaseInfo(1, "Tanaka", "aaa@example.com", LocalDateTime.parse("2022-03-28T10:48:52"), 8080)
-//        );
-//    }
+    @Test
+    @DataSet(value = "datasets/selectWithDateList.yml")
+    @Transactional
+    public void 情報が日付も含めて取得できること() {
+        List<PurchaseInfo> purchaseInfoList = purchaseInfoMapper.findAll();
+
+        assertThat(purchaseInfoList)
+                .hasSize(3)
+                .contains(
+                        new PurchaseInfo(1, "Tanaka", "aaa@example.com", LocalDateTime.parse("2023-01-15T10:30:00"), 8080),
+                        new PurchaseInfo(2, "Yamada", "bbb@example.com", LocalDateTime.parse("2023-02-20T15:45:00"), 5400),
+                        new PurchaseInfo(3, "Uchida", "ccc@example.com", LocalDateTime.parse("2023-03-10T08:00:00"), 12000)
+                );
+    }
 
     @Test
     @DataSet(value = "datasets/infoList.yml")
@@ -104,6 +107,5 @@ public class PurchaseInfoMapperTest {
     }
 
 }
-
 
 
