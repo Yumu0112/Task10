@@ -39,7 +39,7 @@ public class ApiIntegrationTest {
     MockMvc mockMvc;
 
     @Test
-    @DataSet(value = "datasets/infoList.yml")
+    @DataSet(value = "datasets/selectWithDateList.yml")
     @Transactional
     void 情報の取得APIを実行すると全ての情報が取得できステータスコードが200であること() throws Exception {
         String response = mockMvc.perform(get("/purchase-info"))
@@ -52,21 +52,21 @@ public class ApiIntegrationTest {
                           "id": 1,
                               "name": "Tanaka",
                               "email": "aaa@example.com",
-                              "purchaseDate": null,
+                              "purchaseDate": "2023-01-15T10:30:00",
                               "price": 8080
                       },
                       {
                           "id": 2,
                               "name": "Yamada",
                               "email": "bbb@example.com",
-                              "purchaseDate": null,
+                              "purchaseDate": "2023-02-20T15:45:00",
                               "price": 5400
                       },
                       {
                           "id": 3,
                               "name": "Uchida",
                               "email": "ccc@example.com",
-                              "purchaseDate": null,
+                              "purchaseDate": "2023-03-10T08:00:00",
                               "price": 12000
                       }
                 ]
