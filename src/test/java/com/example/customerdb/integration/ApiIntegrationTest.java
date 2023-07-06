@@ -16,11 +16,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -45,49 +47,53 @@ public class ApiIntegrationTest {
         String response = mockMvc.perform(get("/purchase-info"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        JSONAssert.assertEquals(""" 
-                      
-                      [
-                      {
-                          "id": 1,
-                              "name": "Tanaka",
-                              "email": "aaa@example.com",
-                              "purchaseDate": "2023-01-15T10:30:00",
-                              "price": 8080
-                      },
-                      {
-                          "id": 2,
-                              "name": "Yamada",
-                              "email": "bbb@example.com",
-                              "purchaseDate": "2023-02-20T15:45:00",
-                              "price": 5400
-                      },
-                      {
-                          "id": 3,
-                              "name": "Uchida",
-                              "email": "ccc@example.com",
-                              "purchaseDate": "2023-03-10T08:00:00",
-                              "price": 12000
-                      }
-                ]
+        JSONAssert.assertEquals("""                      
+               [
+                    {
+                       "id":1,
+                       "name":"Tanaka",
+                       "email":"aaa@example.com",
+                       "purchaseDate":"2023-01-15T10:30:00",
+                       "price":8080
+                    },
+                    {
+                       "id":2,
+                       "name":"Yamada",
+                       "email":"bbb@example.com",
+                       "purchaseDate":"2023-02-20T15:45:00",
+                       "price":5400
+                    },
+                    {
+                       "id":3,
+                       "name":"Uchida",
+                       "email":"ccc@example.com",
+                       "purchaseDate":"2023-03-10T08:00:00",
+                       "price":12000
+                    }
+               ]
                            """, response, JSONCompareMode.STRICT);
     }
-
-  @Test
-  @DataSet(value = "datasets/infoList.yml")
-  @ExpectedDataSet(value = "datasets/priceList.yml")
-  @Transactional
-  void 価格情報の取得APIを実行すると全ての価格のみの情報が取得できステータスコードが200であること() throws Exception {
-      String response = mockMvc.perform(get("/pricelist"))
+    @Test
+    @DataSet(value = "datasets/infoList.yml")
+    @ExpectedDataSet(value = "datasets/priceList.yml")
+    @Transactional
+    void 価格情報の取得APIを実行すると全ての価格のみの情報が取得できステータスコードが200であること() throws Exception {
+        String response = mockMvc.perform(get("/pricelist"))
               .andExpect(status().isOk())
               .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-          JSONAssert.assertEquals("""  
-    [
-       { "price": 8080 },
-       { "price": 5400 },
-       { "price": 12000 }
-    ]                     
-    """, response, JSONCompareMode.STRICT);
+            JSONAssert.assertEquals("""  
+                [
+                      {
+                         "price":8080
+                      },
+                      {
+                         "price":5400
+                      },
+                      {
+                         "price":12000
+                      }
+                ]                   
+                """, response, JSONCompareMode.STRICT);
     }
 
 
@@ -99,10 +105,10 @@ public class ApiIntegrationTest {
         String response = mockMvc.perform(get("/purchase-info"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        JSONAssert.assertEquals("""  
-                    [
-                    
-                    ]                   
+            JSONAssert.assertEquals("""  
+                [
+                
+                ]                   
                 """, response, JSONCompareMode.STRICT);
         }
 
@@ -120,9 +126,9 @@ public class ApiIntegrationTest {
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
             JSONAssert.assertEquals("""
-                        {
-                            "message": "Info successfully created"
-                        }
+                {
+                    "message": "Info successfully created"
+                }
                         """, response, JSONCompareMode.STRICT);
     }
 
@@ -143,14 +149,14 @@ public class ApiIntegrationTest {
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
                 {
-                    "id": 1,
-                        "purchaseInfo": {
-                            "id": 1,
-                            "name": "kinoshita",
-                            "email": "knst@example.com",
-                            "purchaseDate": null,
-                            "price": 2500
-                        }
+                    "id":1,
+                    "purchaseInfo":{
+                       "id":1,
+                       "name":"kinoshita",
+                       "email":"knst@example.com",
+                       "purchaseDate":null,
+                       "price":2500
+                    }
                 }
                 """, response, JSONCompareMode.STRICT);
     }
@@ -176,11 +182,11 @@ public class ApiIntegrationTest {
                     .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
             JSONAssert.assertEquals("""
                     {
-                       "timestamp": "2023-07-05T12:00+09:00[Asia/Tokyo]",
-                       "error": "Not Found",
-                       "path": "/purchase-info/7",
-                       "status": "404",
-                       "message": "ID:7 was not found"
+                        "timestamp":"2023-07-05T12:00+09:00[Asia/Tokyo]",
+                        "error":"Not Found",
+                        "path":"/purchase-info/7",
+                        "status":"404",
+                        "message":"ID:7 was not found"
                     }
                     """, response, true);
         }
@@ -202,16 +208,47 @@ public class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
-                {
-                    "id": 1,
-                    "purchaseInfo": {
-                         "id": 1,
-                         "name": "Tanaka",
-                         "email": "aaa@example.com",
-                         "purchaseDate": null,
-                         "price": 2000
+               {
+                    "id":1,
+                    "purchaseInfo":{
+                       "id":1,
+                       "name":"Tanaka",
+                       "email":"aaa@example.com",
+                       "purchaseDate":null,
+                       "price":2000
                     }
-                }
+                 }
+                """, response, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    @Transactional
+    @DataSet(value = "datasets/infoList.yml")
+    @ExpectedDataSet(value = "datasets/allNullUpdate.yml", ignoreCols = "id")
+    void nullが入力された場合でも更新できステータスコードが200で返されること() throws Exception {
+        Integer nullableInt = null;
+        int intValue = nullableInt != null ? nullableInt.intValue() : 0;
+        PurchaseInfo updateInfo = new PurchaseInfo(1, "Tanaka", null, null, intValue);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String requestBody = ow.writeValueAsString(updateInfo);
+
+
+        String response = mockMvc.perform(patch("/purchase-info/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+               {
+                    "id":1,
+                    "purchaseInfo":{
+                       "id": 1 ,
+                       "name":"Tanaka",
+                       "email":null,
+                       "purchaseDate":null,
+                       "price": 0
+                    }
+                 }
                 """, response, JSONCompareMode.STRICT);
     }
 
@@ -236,11 +273,11 @@ public class ApiIntegrationTest {
                     .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
             JSONAssert.assertEquals("""
                     {
-                       "timestamp": "2023-07-05T12:00+09:00[Asia/Tokyo]",
-                       "error": "Not Found",
-                       "path": "/purchase-info/7",
-                       "status": "404",
-                       "message": "ID:7 was not found"
+                       "timestamp":"2023-07-05T12:00+09:00[Asia/Tokyo]",
+                       "error":"Not Found",
+                       "path":"/purchase-info/7",
+                       "status":"404",
+                       "message":"ID:7 was not found"
                     }
                     """, response, true);
         }
@@ -255,7 +292,9 @@ public class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""  
-                  {"message": "Info successfully deleted"}                  
+                  {
+                    "message": "Info successfully deleted"
+                  }                  
                 """, response, JSONCompareMode.STRICT);
         }
 
@@ -275,11 +314,11 @@ public class ApiIntegrationTest {
                     .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
             JSONAssert.assertEquals("""
                     {
-                       "timestamp": "2023-07-05T12:00+09:00[Asia/Tokyo]",
-                       "error": "Not Found",
-                       "path": "/purchase-info/7",
-                       "status": "404",
-                       "message": "ID:7 was not found"
+                       "timestamp":"2023-07-05T12:00+09:00[Asia/Tokyo]",
+                       "error":"Not Found",
+                       "path":"/purchase-info/7",
+                       "status":"404",
+                       "message":"ID:7 was not found"
                     }
                     """, response, true);
         }
