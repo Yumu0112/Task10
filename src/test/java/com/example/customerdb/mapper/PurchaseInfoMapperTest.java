@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +58,21 @@ public class PurchaseInfoMapperTest {
     }
 
     @Test
+    @DataSet(value = "datasets/selectWithDateList.yml")
+    @Transactional
+    public void 情報が日付も含めて取得できること() {
+        List<PurchaseInfo> purchaseInfoList = purchaseInfoMapper.findAll();
+
+        assertThat(purchaseInfoList)
+                .hasSize(3)
+                .contains(
+                        new PurchaseInfo(1, "Tanaka", "aaa@example.com", LocalDateTime.parse("2023-01-15T10:30:00"), 8080),
+                        new PurchaseInfo(2, "Yamada", "bbb@example.com", LocalDateTime.parse("2023-02-20T15:45:00"), 5400),
+                        new PurchaseInfo(3, "Uchida", "ccc@example.com", LocalDateTime.parse("2023-03-10T08:00:00"), 12000)
+                );
+    }
+
+    @Test
     @DataSet(value = "datasets/infoList.yml")
     @Transactional
     public void 指定したidの情報が存在しない時に空の要素を返すこと() {
@@ -66,7 +83,7 @@ public class PurchaseInfoMapperTest {
     @Test
     @Transactional
     @DataSet(value = "datasets/infoList.yml")
-    @ExpectedDataSet(value = "datasets/insertInfoList.yml")
+    @ExpectedDataSet(value = "datasets/insertInfoList.yml", ignoreCols = "id")
     public void 新しい情報が追加できること() {
         PurchaseInfo newPurchaseInfo = new PurchaseInfo(4, "kato", "kto@example.com", null, 9000);
         purchaseInfoMapper.insert(newPurchaseInfo);
@@ -90,6 +107,5 @@ public class PurchaseInfoMapperTest {
     }
 
 }
-
 
 
