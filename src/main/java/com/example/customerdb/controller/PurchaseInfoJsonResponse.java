@@ -1,10 +1,11 @@
 package com.example.customerdb.controller;
 
-import com.example.customerdb.entity.PurchaseInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,6 +13,9 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseInfoJsonResponse {
     private int id;
-    private PurchaseInfo purchaseInfo;
+    private String name;
+    private String email;
+    private LocalDateTime purchaseDate;
+    private int price;
 
 }

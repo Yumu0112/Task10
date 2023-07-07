@@ -3,6 +3,7 @@ package com.example.customerdb.controller;
 import com.example.customerdb.entity.PurchaseInfo;
 import com.example.customerdb.service.PurchaseInfoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,23 +39,23 @@ public class PurchaseInfoController {
     }
 
     @PostMapping("/purchase-info")
-    public ResponseEntity<Map<String, String>> addInfo(@RequestBody PurchaseInfo purchaseInfo) {
+    public ResponseEntity<Map<String, String>> addInfo(@Validated @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.addInfo(purchaseInfo);
         Map<String, String> response = new HashMap<>();
         response.put("message", "Info successfully created");
         return ResponseEntity.ok(response);
     }
     @PutMapping("/purchase-info/{id}")
-    public ResponseEntity<PurchaseInfoJsonResponse> updateInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
+    public ResponseEntity<PurchaseInfoJsonResponse> updateInfo(@PathVariable int id, @Validated @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.updateInfo(id, purchaseInfo);
-        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(id, purchaseInfo);
+        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(id, purchaseInfo.getName(), purchaseInfo.getEmail(), purchaseInfo.getPurchaseDate(), purchaseInfo.getPrice());
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/purchase-info/{id}")
-    public ResponseEntity<PurchaseInfoJsonResponse> editInfo(@PathVariable int id, @RequestBody PurchaseInfo purchaseInfo) {
+    public ResponseEntity<PurchaseInfoJsonResponse> editInfo(@PathVariable int id, @Validated @RequestBody PurchaseInfo purchaseInfo) {
         purchaseInfoService.editInfo(id, purchaseInfo);
-        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(id,purchaseInfo);
+        PurchaseInfoJsonResponse response = new PurchaseInfoJsonResponse(purchaseInfo.getId(), purchaseInfo.getName(), purchaseInfo.getEmail(), purchaseInfo.getPurchaseDate(), purchaseInfo.getPrice());
         return ResponseEntity.ok(response);
     }
 

@@ -148,15 +148,11 @@ public class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
-                {
-                    "id":1,
-                    "purchaseInfo":{
-                       "id":1,
-                       "name":"kinoshita",
-                       "email":"knst@example.com",
-                       "purchaseDate":null,
-                       "price":2500
-                    }
+                {                 
+                   "id": 1,
+                   "name": "kinoshita",
+                   "email": "knst@example.com",
+                   "price": 2500
                 }
                 """, response, JSONCompareMode.STRICT);
     }
@@ -209,15 +205,11 @@ public class ApiIntegrationTest {
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
                {
-                    "id":1,
-                    "purchaseInfo":{
                        "id":1,
                        "name":"Tanaka",
                        "email":"aaa@example.com",
-                       "purchaseDate":null,
-                       "price":2000
-                    }
-                 }
+                       "price":2000                  
+               }
                 """, response, JSONCompareMode.STRICT);
     }
 
@@ -240,17 +232,33 @@ public class ApiIntegrationTest {
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
                {
-                    "id":1,
-                    "purchaseInfo":{
+
                        "id": 1 ,
                        "name":"Tanaka",
-                       "email":null,
-                       "purchaseDate":null,
                        "price": 0
-                    }
-                 }
+               }
                 """, response, JSONCompareMode.STRICT);
     }
+
+    @Test
+    @Transactional
+    @DataSet(value = "datasets/infoList.yml")
+    public void nameがnullで入力された際はエラーコード400を返すこと() throws Exception {
+        String requestBody = """
+                {
+                    "name": null,
+                    "email": "aaa@example.com",
+                    "purchaseDate": null,
+                    "price": 8080
+                }
+                """;
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/purchase-info/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+        }
 
 
     @Test

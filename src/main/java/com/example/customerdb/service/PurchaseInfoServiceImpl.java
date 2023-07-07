@@ -40,11 +40,12 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
     @Override
     public PurchaseInfo editInfo(int id, PurchaseInfo purchaseInfo) {
         PurchaseInfo existingInfo = purchaseInfoMapper.findOptionalById(id).orElseThrow(() -> new NotFoundException(id));
-        purchaseInfoMapper.update(id, purchaseInfo);
         existingInfo.setName(purchaseInfo.getName());
         existingInfo.setEmail(purchaseInfo.getEmail());
         existingInfo.setPurchaseDate(purchaseInfo.getPurchaseDate());
         existingInfo.setPrice(purchaseInfo.getPrice());
+
+        purchaseInfoMapper.update(id, purchaseInfo);
         return existingInfo;
     }
 
