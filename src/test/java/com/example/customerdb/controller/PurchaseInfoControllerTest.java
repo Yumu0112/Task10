@@ -160,15 +160,12 @@ public class PurchaseInfoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
-                              "id": 43,
-                              "purchaseInfo": {
-                                  "id": 0,
+                                  "id": 43,
                                   "name": "ziro",
                                   "email": "ziro@example.com",
-                                  "purchaseDate": null,
                                   "price": 1900
-                               }
-                           }
+                        }
+                           
                              """));
     }
 
@@ -190,16 +187,9 @@ public class PurchaseInfoControllerTest {
                         .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
-                            {
-                                "id": 4,
-                                 "purchaseInfo": {
-                                     "id": 0,
-                                     "name": null,
-                                     "email": null,
-                                     "purchaseDate": null,
-                                     "price": 7878
-                                 }
-                           }
+                          {                                                 
+                              "price": 7878                            
+                          }
                    
                         """));
     }

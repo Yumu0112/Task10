@@ -3,6 +3,7 @@ package com.example.customerdb.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ import java.util.Objects;
 @Setter
 public class PurchaseInfo {
     private int id;
+    @NotBlank
     private String name;
     private String email;
     private LocalDateTime purchaseDate;
