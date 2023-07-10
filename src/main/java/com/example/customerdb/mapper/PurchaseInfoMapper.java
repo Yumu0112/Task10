@@ -25,3 +25,4 @@ public interface PurchaseInfoMapper {
     @Delete("DELETE FROM purchase_info WHERE id = #{id}")
     void delete(int id);
 }
+
