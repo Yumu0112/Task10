@@ -26,3 +26,4 @@ public interface PurchaseInfoMapper {
     void delete(int id);
 }
 
+
