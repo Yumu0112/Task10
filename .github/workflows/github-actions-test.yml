@@ -1,4 +1,4 @@
-name: Checkstyle
+name: github-actions-test
 
 on:
   pull_request:
@@ -18,16 +18,29 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Run check style
-        uses: nikitasavinov/checkstyle-action@master
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Conduct Tests
+        run: ./gradlew test
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
         if: always()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: 'github-pr-check'
-          tool_name: 'reviewdog'
-          checkstyle_config: 'config/checkstyle/checkstyle.xml'
-          workdir: 'src/main'
-          level: error
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
+      #     - name: Run check style
+      #       uses: nikitasavinov/checkstyle-action@master
+      #       if: always()
+      #       with:
+      #         github_token: ${{ secrets.GITHUB_TOKEN }}
+      #         reporter: 'github-pr-check'
+      #         tool_name: 'reviewdog'
+      #         checkstyle_config: 'config/checkstyle/checkstyle.xml'
+      #         workdir: 'src/main'
+      #         level: error
 
       - name: Discord Notification
         uses: sarisia/actions-status-discord@v1
