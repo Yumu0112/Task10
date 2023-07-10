@@ -1,4 +1,4 @@
-name: mybatis-demo-CI
+name: github-actions
 on: [ pull_request ]
 permissions:
   contents: read
