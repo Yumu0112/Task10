@@ -172,23 +172,26 @@ public class PurchaseInfoControllerTest {
     @Test
     public void PATCHで指定されたidのデータが更新できること() throws Exception {
         int id = 4;
-        PurchaseInfo purchaseInfo = new PurchaseInfo(4, "kai", "ddd@example.com", null, 9999);
+        PurchaseInfo purchaseInfo = new PurchaseInfo(35, "kai", "ddd@example.com", null, 9999);
         when(purchaseInfoServiceImpl.updateInfo(id, purchaseInfo)).thenReturn(purchaseInfo);
 
         String requestBody = """
                 {
-                    "price": 7878
+                   "name": "kei",
+                   "price": 6767   
                 }
                 """;
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/purchase-info/4")
+                        .patch("/purchase-info/35")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                           {                                                 
-                              "price": 7878                            
+                                "id": 0,
+                                "name": "kei",
+                                "price": 6767                       
                           }
                    
                         """));
