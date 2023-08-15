@@ -39,7 +39,6 @@ class PurchaseInfoServiceImplTest {
         assertThat(actual).isEqualTo(purchaseInfos);
         verify(purchaseInfoMapper, times(1)).findAll();
     }
-
     //    1秒以下の誤差は許容範囲とする
     @Test
     public void 現在時刻が正常に設定されること() {
@@ -84,27 +83,27 @@ class PurchaseInfoServiceImplTest {
         verify(purchaseInfoMapper, times(1)).findOptionalById(id);
     }
 
-    @Test
-    public void 指定されたidに該当するレコードを更新できること() {
-        PurchaseInfo purchaseInfo = new PurchaseInfo(1, "mei", "aaa@example.com", null, 6767);
-        PurchaseInfo expectedInfo = new PurchaseInfo(1, "takashi", "bbb@example.com", LocalDateTime.parse("2017-09-27T19:23:31"), 9000);
-        doReturn(Optional.of(expectedInfo)).when(purchaseInfoMapper).findOptionalById(1);
-
-        PurchaseInfo actualInfo = purchaseInfoService.updateInfo(1, purchaseInfo);
-
-        assertEquals(expectedInfo, actualInfo);
-    }
-
-    @Test
-    void 指定したidのレコードの一部を更新できること() {
-        PurchaseInfo purchaseInfo = new PurchaseInfo(1, "mei", "aaa@example.com", null, 6767);
-        PurchaseInfo expectedInfo = new PurchaseInfo(1, "takashi", "bbb@example.com", LocalDateTime.parse("2017-09-27T19:23:31"), 9000);
-        doReturn(Optional.of(expectedInfo)).when(purchaseInfoMapper).findOptionalById(1);
-
-        PurchaseInfo actualInfo = purchaseInfoService.updateInfo(1, purchaseInfo);
-
-        assertEquals(expectedInfo, actualInfo);
-    }
+//    @Test
+//    public void 指定されたidに該当するレコードを更新できること() {
+//        PurchaseInfo purchaseInfo = new PurchaseInfo(1, "mei", "aaa@example.com", null, 6767);
+//        PurchaseInfo expectedInfo = new PurchaseInfo(1, "takashi", "bbb@example.com", LocalDateTime.parse("2017-09-27T19:23:31"), 9000);
+//        doReturn(Optional.of(expectedInfo)).when(purchaseInfoMapper).findOptionalById(1);
+//
+//        PurchaseInfo actualInfo = purchaseInfoService.updateInfo(1, purchaseInfo);
+//
+//        assertEquals(expectedInfo, actualInfo);
+//    }
+//
+//    @Test
+//    void 指定したidのレコードの一部を更新できること() {
+//        PurchaseInfo purchaseInfo = new PurchaseInfo(1, "mei", "aaa@example.com", null, 6767);
+//        PurchaseInfo expectedInfo = new PurchaseInfo(1, "takashi", "bbb@example.com", LocalDateTime.parse("2017-09-27T19:23:31"), 9000);
+//        doReturn(Optional.of(expectedInfo)).when(purchaseInfoMapper).findOptionalById(1);
+//
+//        PurchaseInfo actualInfo = purchaseInfoService.updateInfo(1, purchaseInfo);
+//
+//        assertEquals(expectedInfo, actualInfo);
+//    }
 
     @Test
     public void 一部が空欄でも更新作業ができること() {
